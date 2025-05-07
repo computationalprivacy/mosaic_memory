@@ -86,7 +86,13 @@ The code to create the dataset, and analyze the results is in `kendall_tau.ipynb
 
 **3.3 Paraphrasing**
 
+
+
 **3.4 Ablations**
 
+All ablations reported in the paper (learning rate, model size, temperature to generate reference canaries) have been generated using the main functionality of the code as described above. 
+
 ## (4) Finding fuzzy duplicates in a real-world dataset
+
+TBD
 
