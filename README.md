@@ -4,8 +4,9 @@ We here elaborate on the code used to generate the results discussed in our manu
 
 ## (1) Setting up the environment
 
-- `conda create --name canary python=3.9`
-- `pip install -r requirements.txt` (this folder)
+- `conda create --name mosaic python=3.9`
+- `conda activate --name mosaic`
+- `pip install -r requirements.txt` 
 
 Some models used in this reposority require you to be authenticated on Hugging Face (and have accepted certain model licenses). If you wish to use these models, you will need to log in on Hugging Face, using `huggingface-cli login` and providing your token. 
 
@@ -54,7 +55,7 @@ We provide scripts to finetune all models for exact duplicates and fuzzy duplica
 The script takes as arguments the training hyperparameters, the training data (i.e. the books with injected duplicates) and the path to member and non-member reference canaries. 
 It uses the latter to monitor MIA AUC (using the Loss attack) during training. 
 
-By default, the script report the training to Weights and Biases, which will require a login if you'd like to use this as well.
+By default, the script reports the training to Weights and Biases, which will require a login if you'd like to use this as well.
 
 Other setups considered in the paper (different base model, learning rate, etc) can be easily achieved by updating the parameters. 
 
