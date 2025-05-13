@@ -86,7 +86,7 @@ The code to create the dataset, and analyze the results is in `kendall_tau.ipynb
 
 **3.3 Paraphrasing**
 
-
+The paraphrases have been generated using `./src/paraphrase.py` and `./scripts/generate_paraphrases.sh`. The injection of paraphrases and the membership inference is then executed following the same process as for the other experiments.
 
 **3.4 Ablations**
 
