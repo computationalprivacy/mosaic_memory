@@ -1,0 +1,8 @@
+logs/
+merge_scripts/
+target/
+
+*.pyc
+**/__pycache__/
+.python-version
+Cargo.lock
