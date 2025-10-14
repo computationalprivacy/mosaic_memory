@@ -39,13 +39,14 @@ def main(args):
         buckets = defaultdict(list)
         total_added = 0
         logger.info(f"Processing {len(dups)} positions from {dups_path}")
-        for pos, count in zip(dups, dups_sizes):
+        for j, count in enumerate(dups_sizes):
             if count not in args.target_counts:
                 continue
 
             if len(buckets[count]) >= samples_per_chunk:
                 continue
 
+            pos = dups[sum(dups_sizes[:j])]
             buckets[count].append(pos)
             total_added += 1
 
@@ -71,20 +72,23 @@ def main(args):
         for count, positions in all_buckets.items():
             logger.info(f"Processing bucket with count {count}, {len(positions)} positions")
             for pos in positions:
-                if pos%2 == 1:
-                    pos += 1
-                
-                text = tokenizer.decode(bytes_to_ints(ds[pos:pos+args.length * 2],2))
-                arr = np.array(tokenizer.encode(text), dtype=np.uint16).view(np.uint8).tobytes()
-                arr_length = np.array([len(arr)], dtype=np.uint32).view(np.uint32).tobytes()
+                try:
+                    if pos%2 == 1:
+                        pos += 1
+                    
+                    text = tokenizer.decode(bytes_to_ints(ds[pos:pos+args.length * 2],2))
+                    arr = np.array(tokenizer.encode(text), dtype=np.uint16).view(np.uint8).tobytes()
+                    arr_length = np.array([len(arr)], dtype=np.uint32).view(np.uint32).tobytes()
 
-                f.write(arr_length)
-                f.write(arr)
+                    f.write(arr_length)
+                    f.write(arr)
 
-                final_positions.append(pos)
-                processed_count += 1
-                if processed_count % 1000 == 0:
-                    logger.info(f"Processed {processed_count} positions so far")
+                    final_positions.append(pos)
+                    processed_count += 1
+                    if processed_count % 1000 == 0:
+                        logger.info(f"Processed {processed_count} positions so far")
+                except:
+                    pass
 
     positions_path = os.path.join(args.output_dir, "positions.pkl")
     logger.info(f"Writing {len(final_positions)} final positions to {positions_path}")
