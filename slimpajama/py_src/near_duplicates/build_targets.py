@@ -73,8 +73,15 @@ def sample_bucket(ds, source_positions, source_counts, n, target_count, target_t
     count_lower = round(target_count * (1 - target_tolerance))
     count_upper = round(target_count * (1 + target_tolerance))
 
+    logging.info(f"Sampling bucket with target_count={target_count}, tolerance={target_tolerance}")
+    logging.info(f"Count range: [{count_lower}, {count_upper}]")
+    logging.info(f"Total source sequences: {len(source_positions)}")
+
     count_indices = [(i, cnt) for i, cnt in enumerate(source_counts) if count_lower <= cnt <= count_upper]
     filtered_positions = [(source_positions[i],cnt) for i,cnt in count_indices]
+
+    logging.info(f"Found {len(count_indices)} sequences in target count range")
+    logging.info(f"Filtered positions: {len(filtered_positions)}")
 
     for pos,cnt in filtered_positions:
         if pos%2 != 0:

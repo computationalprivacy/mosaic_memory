@@ -1297,7 +1297,22 @@ fn cmd_merge(data_files: &Vec<String>, output_file: &String, num_threads: i64)  
         let mut prev = &texts[0][0..];
         while let Some(MergeState {suffix: _suffix, position, table_index}) = heap.pop() {
             //next_table.write_all(&(position + delta[table_index] as u64).to_le_bytes()).expect("Write OK");
-            next_table.write_all(&(position + delta[table_index] as u64).to_le_bytes()[..big_ratio]).expect("Write OK");        
+            let bytes_to_write = &(position + delta[table_index] as u64).to_le_bytes()[..big_ratio];
+            if let Err(e) = next_table.write_all(bytes_to_write) {
+                eprintln!("Failed to write to table file: {}", e);
+                eprintln!("Output file: {}.table.bin.{:04}", output_file.clone(), part);
+                eprintln!("Position: {}, delta[{}]: {}, big_ratio: {}", position, table_index, delta[table_index], big_ratio);
+                eprintln!("Pausing before retry...");
+                std::thread::sleep(std::time::Duration::from_millis(100));
+                eprintln!("Retrying write operation...");
+                
+                if let Err(e2) = next_table.write_all(bytes_to_write) {
+                    eprintln!("Retry failed: {}", e2);
+                    panic!("Write failed after retry");
+                } else {
+                    eprintln!("Retry succeeded");
+                }
+            }
 
             let position = get_next_maybe_skip(&mut tables[table_index],
                                                &mut idxs[table_index], texts_len[table_index],);

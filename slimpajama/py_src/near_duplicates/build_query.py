@@ -40,8 +40,16 @@ def main(args):
         total_added = 0
         logger.info(f"Processing {len(dups)} positions from {dups_path}")
         for j, count in enumerate(dups_sizes):
-            if count not in args.target_counts:
+            relevant = False
+            for tc in args.target_counts:
+                if tc*0.9 <= count <= tc*1.1:
+                    relevant=True
+                    break
+
+            if not relevant:
                 continue
+            # if count not in args.target_counts:
+            #     continue
 
             if len(buckets[count]) >= samples_per_chunk:
                 continue
