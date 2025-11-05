@@ -64,9 +64,8 @@ At the end of training, the final model is saved to the desired directory, which
 **2.6 Membership inference**
 
 Now we have the finetuned models, we want to evaluate the MIA. 
-We run this for each target model individually and sequentially, with example code provided in `./notebooks/membership_inference_example.ipynb`. 
-
-The results are then saved as a pickle file, to be used for plotting. 
+We run this for each target model individually using `./src/compute_mia_auc.py` and an example script provided as `./scripts/compute_mia_auc_exact.sh`. 
+Note tha the script by default iterates over a variable of interests (e.g. number of exact repetitions, number of replacements) and saves the results in a pickle file, which can then later be used for plotting. 
 
 **2.7 Plotting results**
 
