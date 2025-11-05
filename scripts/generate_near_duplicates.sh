@@ -9,8 +9,8 @@ do
     --num-variations 9 \
     --num-injection-points $T \
     --no-replace-same-indices \
-    --candidate-gen-strategy "mlm_random" \
-    --topk=50000 \
+    --candidate-gen-strategy "mlm" \
+    --topk=10 \
     --seed=42 \
     --device="cuda:0"
 done

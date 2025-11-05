@@ -28,9 +28,10 @@ def check_retokenization(seq, tokenizer):
     
     for token in seq:
         detokenized = tokenizer.decode(token)
-        token_again = tokenizer(detokenized)['input_ids'][0]
-        if token != token_again:
-            print(token, detokenized, token_again)
+        retokenized = tokenizer.encode(detokenized, add_special_tokens=False)[0]
+        
+        if token != retokenized:
+            print(token, detokenized, retokenized)
             return False
 
     return True
@@ -78,13 +79,16 @@ def gen_canaries(model, tokenizer, target_tokenizer, args):
                 generated_canary_text = tokenizer.decode(generated_canary_tokens[1:])               
                 
                 # get them tokenized using the target tokenizer
-                generated_canaries_target_tokens = target_tokenizer(generated_canary_text) 
+                generated_canaries_target_tokens = target_tokenizer.encode(generated_canary_text, add_special_tokens=False)
+                
+                # check if it starts with BOS token
+                assert generated_canaries_target_tokens[0] != target_tokenizer.bos_token_id
                 
                 # truncate this to the right length
-                if len(generated_canaries_target_tokens['input_ids']) < args.seq_len:
+                if len(generated_canaries_target_tokens) < args.seq_len:
                     continue
                 else:
-                    generated_canaries_target_tokens_truncated = generated_canaries_target_tokens['input_ids'][:args.seq_len]
+                    generated_canaries_target_tokens_truncated = generated_canaries_target_tokens[:args.seq_len]
 
                 # get the canary text
                 new_canary_tokens = generated_canaries_target_tokens_truncated

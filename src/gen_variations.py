@@ -34,17 +34,26 @@ def build_single_position_candidates_mlm(tokens, topk, tokenizer, mlm_tokenizer,
     with torch.no_grad():
         logits = mlm_model(**mlm_inputs).logits
     # logits.shape = (100, 10X, vocab_size)
+        
+    # get the positions of the mask tokens
     mask_token_indices = (mlm_inputs['input_ids'] == mlm_tokenizer.mask_token_id).nonzero(as_tuple=False).cpu().numpy()
-
+    # this is of shape (num_examples, 2) where each row is (example_index, position_in_example)
+    
     candidates = {}
     # let's now run through the selected mlm tokens to replace each target token
     for i in range(len(tokens)):
-        top_indices = logits[i, mask_token_indices[i][0] + 1].topk(topk).indices.cpu().numpy() # + 1 because of SoS tokens in encoding
+        
+        # get the position of the mask token for this example
+        assert mask_token_indices[i][0] == i
+        mask_token_pos = mask_token_indices[i][1]
+                
+        top_indices = logits[i, mask_token_pos].topk(topk).indices.cpu().numpy() 
         top_text = [mlm_tokenizer.decode([idx]) for idx in top_indices]
         
         # now let's select the replacement token, making sure it's not the same as the original one
         original_token = tokenizer.decode(tokens[i])
-        replacement_tokens = [tokenizer.encode(text) for text in top_text if text != original_token]
+        replacement_tokens = [tokenizer.encode(text, add_special_tokens=False) for text in top_text if text != original_token]
+                
         candidates[i] = (replacement_tokens, None)
 
     return candidates
@@ -54,7 +63,7 @@ def build_single_position_candidates_mlm_random(tokens, tokenizer, mlm_tokenizer
     for i in range(len(tokens)):
         sampled_mlm_tokens = random.sample(range(mlm_vocab_size), k=50)
         sampled_text = [mlm_tokenizer.decode([sampled_mlm_token]) for sampled_mlm_token in sampled_mlm_tokens]
-        replacement_tokens = [tokenizer.encode(text) for text in sampled_text]
+        replacement_tokens = [tokenizer.encode(text, add_special_tokens=False) for text in sampled_text]
         ret[i] = (replacement_tokens, None)
     return ret
 

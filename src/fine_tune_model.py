@@ -17,7 +17,6 @@ EVAL_DS_PATH = "SOME_DATA_DIR/books_eval_100"
 CACHE_DIR = "SOME_DATA_DIR/cache/huggingface"
 MAX_CONTEXT_SIZE = 2048
 
-
 def split_into_chunks(examples, seq_len=MAX_CONTEXT_SIZE):
     ret = []
     for example in examples["input_ids"]:
@@ -55,7 +54,7 @@ def get_MIA_data(path_to_members, path_to_non_members, tokenizer):
 
 
 def prepare_eval_ds(tokenizer):
-    eval_ds = load_from_disk(EVAL_DS_PATH).train_test_split(test_size=0.01, seed=43)["test"]
+    eval_ds = load_from_disk(EVAL_DS_PATH).train_test_split(test_size=0.02, seed=43)["test"]
     eval_ds = eval_ds.map(lambda example: tokenizer(example["text"]), batched=True, num_proc=10)
     eval_ds = eval_ds.map(split_into_chunks, batched=True, remove_columns=eval_ds.column_names)
     return eval_ds
@@ -68,11 +67,12 @@ def main(args):
     print(f"Loading target model {args.model}...")
     model, tokenizer = load_model(args.model, args.device, args.reduced_precision)
     
-    canary_tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B", cache_dir=CACHE_DIR)
+    #canary_tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B", cache_dir=CACHE_DIR)
 
     # load training data
     print("Loading the training data...")
     training_data = load_from_disk(args.training_data)
+    training_data = training_data.shuffle(seed=args.seed)
     print("Tokenizing the training data...")
     training_data = training_data.map(lambda example: tokenizer(example["text"]),
                                       batched=True, num_proc=10)
@@ -86,7 +86,7 @@ def main(args):
 
     # get the MIA data
     print("Loading the canaries and non-members..")
-    MIA_data = get_MIA_data(args.path_to_members, args.path_to_non_members, canary_tokenizer)
+    MIA_data = get_MIA_data(args.path_to_members, args.path_to_non_members, tokenizer)
 
     target_tokens = {}
 
@@ -161,7 +161,7 @@ def main(args):
     if args.save_checkpoint:
         print("Training is done - saving checkpoint")
 
-        save_path = f"SOME_DATA_DIR/model_checkpoints/{model_name}_checkpoints/{run_name}"
+        save_path = f"SOME_DATA_DIR/{run_name}"
         model.save_pretrained(save_path)
 
 
@@ -179,5 +179,6 @@ if __name__ == "__main__":
     parser.add_argument("--batch-size", type=int, default=3)
     parser.add_argument("--accumulate-steps", type=int, default=1)
     parser.add_argument("--reduced-precision", action="store_true")
+    parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
     main(args)
