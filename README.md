@@ -83,13 +83,21 @@ The code to create the dataset, and analyze the results is in `./notebooks/inser
 
 The code to create the dataset, and analyze the results is in `kendall_tau.ipynb` and `kendall_tau_results.ipynb`, respectively, while the associated script is `./scripts/finetune_gptneo_shuffle.sh`.
 
-**3.3 Paraphrasing**
+**3.3 Varying the top-k**
+
+The fuzzy duplicates can be created by adjusting the top-k variable in `src/gen_variations.py`. We provide code to plot the results in `mlm_varyl_results.ipynb`.
+
+**3.4 Paraphrasing**
 
 The paraphrases have been generated using `./src/paraphrase.py` and `./scripts/generate_paraphrases.sh`. The injection of paraphrases and the membership inference is then executed following the same process as for the other experiments.
 
-**3.4 Ablations**
+**3.5 Ablations**
 
 All ablations reported in the paper (learning rate, model size, temperature to generate reference canaries) have been generated using the main functionality of the code as described above. 
+
+**3.6 An additional extraction experiment**
+
+The code to evaluate the (approximate) extraction can be found in `notebooks/extraction.ipynb`.
 
 ## (4) Finding fuzzy duplicates in a real-world dataset
 
