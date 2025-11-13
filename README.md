@@ -26,7 +26,7 @@ Other experiments, including the generation of the reference canaries or their f
 In the following sections (2.1+), we carefully elaborate on how to reproduce all the steps in the experiments.
 Note that these experiments are relatively heavy-weight (e.g. generating canaries from LLM, training LLMs) and require access to GPUs.
 
-To illustrate the main experiment in a lightweight fashion, we show how we go from precomputed MIA AUCs to the actual computation of the exact duplicate equivalent. 
+To illustrate the main experiment in a lightweight fashion, we show how we go from precomputed MIA AUCs to the actual computation of the exact duplicate equivalent. The MIA AUCs are computed using the sections below, and result from following the commands in section 2.6. 
 Specifically, we provide `./notebooks/metric_figure.ipynb`, which loads in precomputed MIA AUCs in the `./data/` folder and shows:
 - How MIA AUC evolves for the number of exact duplicates. 
 - How MIA AUC evolves for a variety of fuzzy duplicates.
