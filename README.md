@@ -16,6 +16,8 @@ If you wish to report model training results to Weigths and Biases (as by defaul
 
 Note that for most of the functionality provided in this project (e.g. generating canaries, fuzzy duplicates, continued pretraining of the target LLMs) requires access to GPUs. 
 Throughout this work, we have used a set of A100 GPUs with 80GB RAM. 
+Continued pretraining of GPT-Neo-1.3B on the dataset we consider takes roughly 2 GPU hours in this setup, with minor variations for other models. 
+Other experiments, including the generation of the reference canaries or their fuzzy duplicates, should take less than 10 minutes. 
 
 ## (2) Main functionality
 
