@@ -10,7 +10,10 @@ We here elaborate on the code used to generate the results discussed in our manu
 
 Some models used in this reposority require you to be authenticated on Hugging Face (and have accepted certain model licenses). If you wish to use these models, you will need to log in on Hugging Face, using `huggingface-cli login` and providing your token. 
 
-If you wish to report model training results to Weigths and Biases (as by default in this repository), you will also need to provide a wandb-tokenn when prompted.
+If you wish to report model training results to Weigths and Biases (as by default in this repository), you will also need to provide a wandb-token when prompted.
+
+Note that for most of the functionality provided in this project (e.g. generating canaries, fuzzy duplicates, continued pretraining of the target LLMs) requires access to GPUs. 
+Throughout this work, we have used a set of A100 GPUs with 80GB RAM. 
 
 ## (2) Main functionality
 
