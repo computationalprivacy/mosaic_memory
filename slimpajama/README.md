@@ -27,7 +27,7 @@ in each subset individually, and then merging hihgly repeated sequences.
 First, you'd need to download SlimPajama. While it can be done as a part of the processing script, we find
 pre-downloading the data to be more stable.
 
-git clone the repo into the directory of your choosing (it will download ~900GB of data)
+git clone the repo into the directory of your choosing (it will download ~900GB of data). 
 
 ```bash
 cd /path/to/slimpajama && git clone https://huggingface.co/datasets/cerebras/SlimPajama-627B
@@ -45,7 +45,7 @@ python py_src/dedupe/load_slimpajama.py
 --num-proc 80
 ```
 
-It will take a while - first huggingface will cache the dataset for faster random access, 
+It will take a while (~20 hours on our hardware) - first huggingface will cache the dataset for faster random access, 
 and then launching the tokenization.
 
 It should create 20 tokenized subsets in the `/working/dir/tokenized` dir: e.g. `slimpajama_0_of_20.train` (and slimpajama_0_of_20.train.size) with document sizes.
@@ -124,6 +124,6 @@ python py_src/near_duplicates/scan.py \
 --target-sequences-path /working/dir/target_sequences.pkl \
 ```
 
-This produces a number of files in `/working/dir/scan/` - all that is needed to build the final graphs 
+This step is expected to take ~36 hours. It produces a number of files in `/working/dir/scan/` - all that is needed to build the final graphs 
 using `plot_near_duplicates.py`
 
