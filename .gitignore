@@ -1,7 +1,11 @@
 logs/
 merge_scripts/
 target/
-data/
+
+# Ignore everything in data/ except .pickle files
+data/*
+!data/*.pickle
+
 caches/
 slimpajama/scan*
 slimpajama/queries
