@@ -3,6 +3,10 @@ merge_scripts/
 target/
 data/
 caches/
+slimpajama/scan*
+slimpajama/queries
+
+config_local.py
 
 *.pyc
 **/__pycache__/
