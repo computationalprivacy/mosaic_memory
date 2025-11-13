@@ -8,6 +8,8 @@ We here elaborate on the code used to generate the results discussed in our manu
 - `conda activate --name mosaic`
 - `pip install -r requirements.txt` 
 
+The installation of this environment should take less than 30 minutes on any computer system. 
+
 Some models used in this reposority require you to be authenticated on Hugging Face (and have accepted certain model licenses). If you wish to use these models, you will need to log in on Hugging Face, using `huggingface-cli login` and providing your token. 
 
 If you wish to report model training results to Weigths and Biases (as by default in this repository), you will also need to provide a wandb-token when prompted.
